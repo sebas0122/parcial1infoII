@@ -143,7 +143,7 @@ void acomodador(){
     fout.close();
 }
 
-void matrizhoras(char a[],bool d[7][24]){
+void matrizhoras(char a[],bool d[7][17]){
     int i=0;
     int s=0;
     int limite=0;
@@ -193,8 +193,8 @@ void matrizhoras(char a[],bool d[7][24]){
             }
             for (int t=0;t<7;t++){
                 if (t==limite2){
-                    for (int j=0;j<24;j++){
-                        if (j>=menor && j<mayor){
+                    for (int j=0;j<17;j++){
+                        if (j>=menor-6 && j<mayor-6){
                             if(d[t][j]==false){
                                 d[t][j]=true;
                             }
@@ -213,10 +213,10 @@ void matrizhoras(char a[],bool d[7][24]){
     }
 }
 
-bool asignacion(int h,char codi[],bool d[7][24]){
+bool asignacion(int h,char codi[],bool d[7][17]){
     char dia='a';
     for (int t=0;t<7;t++){
-        for (int j=0;j<24;j++){
+        for (int j=0;j<17;j++){
             if(h>0){
                 if (d[t][j]==false){
                     d[t][j]=true;
@@ -244,7 +244,7 @@ bool asignacion(int h,char codi[],bool d[7][24]){
                     else if (t==6){
                         dia='D';
                     }
-                    cout<<" : "<<dia<<" "<<j+1<<endl;
+                    cout<<" : "<<dia<<" "<<j+6<<endl;
                     h-=1;
                 }
             }
@@ -308,9 +308,9 @@ int horasobrantes(int n, int docente){
 
 void horario(){
     //acomodador();
-    bool matriz[7][24];
+    bool matriz[7][17];
     for (int i=0;i<7;i++){
-        for (int j=0;j<24;j++){
+        for (int j=0;j<17;j++){
             matriz[i][j]=false;
         }
     }
@@ -362,6 +362,7 @@ void horario(){
             }
             creditosint=conversorcharint(creditos);
             personales=horasobrantes(creditosint,hprofe[p]);
+            p++;
             asignacion(personales,codigo,matriz);
         }
         else if(con==3){
@@ -370,19 +371,25 @@ void horario(){
     }
     fin.close();
     cout<<'\n';
-    for (int i=0;i<24;i++){
-        cout<<" "<<i<<" ";
+    cout<<"   ";
+    for (int i=6;i<23;i++){
+        if(i<10){
+            cout<<i<<"  ";
+        }
+        else{
+            cout<<i<<" ";
+        }
     }
     cout<<'\n';
     char diasemana[]="LMWJVSD";
     for (int i=0;i<7;i++){
-        cout<<'\n'<<diasemana[i];
-        for (int j=0;j<24;j++){
+        cout<<'\n'<<diasemana[i]<<"  ";
+        for (int j=0;j<17;j++){
             if (matriz[i][j]==false){
-                cout<<"  -  ";
+                cout<<"-  ";
             }
             else{
-                cout<<"  +  ";
+                cout<<"+  ";
             }
         }
     }
