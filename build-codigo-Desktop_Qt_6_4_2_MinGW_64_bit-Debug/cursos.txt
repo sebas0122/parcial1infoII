@@ -1,0 +1,36 @@
+2536101
+descubriendo la fisica
+3
+2555131
+calculo diferencial
+3
+2555101
+algebra y trigonometria
+3
+2555121
+geometria vectorial
+3
+2598511
+informatica i
+4
+2538101
+ingles i
+1
+2537101
+vivamos la u
+1
+2536201
+fisica mecanica
+3
+2598521
+informatica ii
+4
+2555231
+calculo integral
+3
+2598532
+circuitos electricos i
+4
+2555221
+algebra lineal
+3

@@ -31,6 +31,22 @@ int longitud(char a[]){
     return i;
 }
 
+bool comparador(char a[], char b[]){
+    int lon1=longitud(a);
+    int lon2=longitud(b);
+    if(lon1==lon2){
+        for (int i=0;i<lon1;i++){
+            if (a[i]!=b[i]){
+                return false;
+            }
+        }
+    }
+    else if(lon1!=lon2){
+        return false;
+    }
+    return true;
+}
+
 int conversorcharint(char num[]){
     int lon=longitud(num);
     int mult=lon-1;
@@ -56,6 +72,39 @@ bool semana(char a[]){
     return false;
 }
 
+bool verificadorcodigo(char a[]){
+    ifstream fin;
+    try{
+        fin.open("cursos.txt");
+        if(!fin.is_open()){
+            throw '2';
+        }
+    }
+    catch (char c){
+        cout<<"Error # "<<c<<": ";
+        if(c=='2'){
+            cout<<"Error al abrir el archivo para lectura.\n";
+        }
+    }
+    int con=2;
+    char l[100]={};
+    bool verdad=false;
+    while (fin.getline(l,100)){
+        con++;
+        if (con==3){
+            verdad=comparador(l,a);
+            if (verdad==true){
+                fin.close();
+                return true;
+            }
+            con=0;
+            l[100]={};
+        }
+    }
+    fin.close();
+    return false;
+}
+
 void acomodador(){
     ofstream fout;
     try{
@@ -71,7 +120,6 @@ void acomodador(){
         }
     }
     char codigoc[10]="a";
-    char creditos[3]="a";
     char hora1[3]="a";
     char hora2[3]="a";
     char dia[2]="T";
@@ -81,19 +129,24 @@ void acomodador(){
     int longitud1;
     while (menu!=2){
         //fout.write(cambiodelinea,1);
-        while (solonumeros(codigoc)==false){
+        while (solonumeros(codigoc)==false || verificadorcodigo(codigoc)==false){
+            verificadorcodigo(codigoc);
             cout<<"ingrese el codigo del curso: ";
             cin>>codigoc;
         }
+        /*
         while (solonumeros(creditos)==false){
             cout<<"ingrese la cantidad de creditos de esa materia: ";
             cin>>creditos;
         }
+        */
         longitud1=longitud(codigoc);
         fout.write(codigoc,longitud1);
+        /*
         fout.write(cambiodelinea,1);
         longitud1=longitud(creditos);
         fout.write(creditos,longitud1);
+        */
         fout.write(cambiodelinea,1);
         while (menu2!=2){
             while (semana(dia)==false){
@@ -135,7 +188,6 @@ void acomodador(){
         }
         fout.write(cambiodelinea,1);
         codigoc[0]='a';
-        creditos[0]='a';
         menu2=0;
         cout<<"si desea agregar otra materia marque un numero diferente de 2: ";
         cin>>menu;
@@ -213,15 +265,49 @@ void matrizhoras(char a[],bool d[7][17]){
     }
 }
 
-bool asignacion(int h,char codi[],bool d[7][17]){
+void getname(char a[],char b[]){
+    ifstream fin;
+    try{
+        fin.open("cursos.txt");
+        if(!fin.is_open()){
+            throw '2';
+        }
+    }
+    catch (char c){
+        cout<<"Error # "<<c<<": ";
+        if(c=='2'){
+            cout<<"Error al abrir el archivo para lectura.\n";
+        }
+    }
+    int con=2;
+    char l[100]={};
+    while (fin.getline(l,100)){
+        con++;
+        if (con==3){
+            if(comparador(l,a)==true){
+                fin.getline(l,100);
+                int lon=longitud(l);
+                for (int s=0;s<lon;s++){
+                    b[s]=l[s];
+                }
+                break;
+            }
+            con=0;
+        }
+    }
+    fin.close();
+}
+
+bool asignacion(int h,char codi[],char n[],bool d[7][17]){
     char dia='a';
     for (int t=0;t<7;t++){
         for (int j=0;j<17;j++){
             if(h>0){
                 if (d[t][j]==false){
                     d[t][j]=true;
-                    for (int i=0;codi[i]!='\0';i++){
-                        cout<<codi[i];
+                    getname(codi,n);
+                    for (int i=0;n[i]!='\0';i++){
+                        cout<<n[i];
                     }
                     if (t==0){
                         dia='L';
@@ -306,6 +392,44 @@ int horasobrantes(int n, int docente){
     }
 }
 
+void getcredito(char a[],char b[]){
+    ifstream fin;
+    try{
+        fin.open("cursos.txt");
+        if(!fin.is_open()){
+            throw '2';
+        }
+    }
+    catch (char c){
+        cout<<"Error # "<<c<<": ";
+        if(c=='2'){
+            cout<<"Error al abrir el archivo para lectura.\n";
+        }
+    }
+    int con=2;
+    char l[100]={};
+    int i=0;
+    while (fin.getline(l,100)){
+        con++;
+        if (con==3){
+            if(comparador(l,a)==true){
+                while(i<2){
+                    fin.getline(l,100);
+                    i++;
+                }
+                int lon=longitud(l);
+                for (int s=0;s<lon;s++){
+                    b[s]=l[s];
+                }
+                fin.close();
+                break;
+            }
+            con=0;
+        }
+    }
+    fin.close();
+}
+
 void horario(){
     //acomodador();
     bool matriz[7][17];
@@ -333,7 +457,7 @@ void horario(){
     int p=0;
     while (fin.getline(profe,100)){
         con++;
-        if (con==3){
+        if (con==2){
             matrizhoras(profe,matriz);
             con=0;
             hprofe[p]=horadocente(profe);
@@ -344,6 +468,7 @@ void horario(){
     fin.seekg(0);
     char linea[100]={};
     char codigo[100]={};
+    char name[100]={};
     char creditos[100]={};
     int creditosint=0;
     int personales=0;
@@ -355,17 +480,13 @@ void horario(){
             for(int i=0;linea[i]!='\0';i++){
                 codigo[i]=linea[i];
             }
-        }
-        else if(con==2){
-            for(int i=0;linea[i]!='\0';i++){
-                creditos[i]=linea[i];
-            }
+            getcredito(codigo,creditos);
             creditosint=conversorcharint(creditos);
             personales=horasobrantes(creditosint,hprofe[p]);
             p++;
-            asignacion(personales,codigo,matriz);
+            asignacion(personales,codigo,name,matriz);
         }
-        else if(con==3){
+        else if(con==2){
             con=0;
         }
     }
