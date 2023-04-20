@@ -128,25 +128,13 @@ void acomodador(){
     int menu2=0;
     int longitud1;
     while (menu!=2){
-        //fout.write(cambiodelinea,1);
         while (solonumeros(codigoc)==false || verificadorcodigo(codigoc)==false){
             verificadorcodigo(codigoc);
             cout<<"ingrese el codigo del curso: ";
             cin>>codigoc;
         }
-        /*
-        while (solonumeros(creditos)==false){
-            cout<<"ingrese la cantidad de creditos de esa materia: ";
-            cin>>creditos;
-        }
-        */
         longitud1=longitud(codigoc);
         fout.write(codigoc,longitud1);
-        /*
-        fout.write(cambiodelinea,1);
-        longitud1=longitud(creditos);
-        fout.write(creditos,longitud1);
-        */
         fout.write(cambiodelinea,1);
         while (menu2!=2){
             while (semana(dia)==false){
@@ -195,7 +183,7 @@ void acomodador(){
     fout.close();
 }
 
-void matrizhoras(char a[],bool d[7][17]){
+void matrizhoras(char a[],int d[7][17]){
     int i=0;
     int s=0;
     int limite=0;
@@ -247,8 +235,8 @@ void matrizhoras(char a[],bool d[7][17]){
                 if (t==limite2){
                     for (int j=0;j<17;j++){
                         if (j>=menor-6 && j<mayor-6){
-                            if(d[t][j]==false){
-                                d[t][j]=true;
+                            if(d[t][j]==0){
+                                d[t][j]=1;
                             }
                             else{
                                 cout<<"Hay materias que tienen el mismo horario. Por lo tanto lo que matriculo no es valido.";
@@ -298,13 +286,13 @@ void getname(char a[],char b[]){
     fin.close();
 }
 
-bool asignacion(int h,char codi[],char n[],bool d[7][17]){
+bool asignacion(int h,char codi[],char n[],int d[7][17]){
     char dia='a';
     for (int t=0;t<7;t++){
         for (int j=0;j<17;j++){
             if(h>0){
-                if (d[t][j]==false){
-                    d[t][j]=true;
+                if (d[t][j]==0){
+                    d[t][j]=2;
                     getname(codi,n);
                     for (int i=0;n[i]!='\0';i++){
                         cout<<n[i];
@@ -335,6 +323,98 @@ bool asignacion(int h,char codi[],char n[],bool d[7][17]){
                 }
             }
         }
+    }
+    if (h==0){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+bool asignacionusuario(int h,char codi[],char n[],int d[7][17]){
+    cout<<"\n\n";
+    while (h>0){
+        getname(codi,n);
+        cout<<"curso: ";
+        for (int i=0;n[i]!='\0';i++){
+            cout<<n[i];
+        }
+        cout<<"\n\nHoras por asignar: "<<h;
+        int limite2=0;
+        int j=0;
+        char dia='a';
+        while (dia!='L' && dia!='M' && dia!='W' && dia!='J' && dia!='V' && dia!='S' && dia!='D'){
+            cout<<"\n\ningrese el dia de la semana en el que desea tener la hora de la materia(ponerlo con su inicial mayuscula. Si es miercoles poner 'W'): ";
+            cin>>dia;
+        }
+        while(j<6 || j>24){
+            cout<<"ingrese la hora: ";
+            cin>>j;
+        }
+        if(h>0){
+            for (int i=0;n[i]!='\0';i++){
+                cout<<n[i];
+            }
+            if (dia=='L'){
+                limite2=0;
+            }
+            else if (dia=='M'){
+                limite2=1;
+            }
+            else if (dia=='W'){
+                limite2=2;
+            }
+            else if (dia=='J'){
+                limite2=3;
+            }
+            else if (dia=='V'){
+                limite2=4;
+            }
+            else if (dia=='S'){
+                limite2=5;
+            }
+            else if (dia=='D'){
+                limite2=6;
+            }
+            cout<<" : "<<dia<<" "<<j<<endl;
+        }
+        if (d[limite2][j-6]==0){
+            d[limite2][j-6]=2;
+            h-=1;
+        }
+        else{
+            cout<<"\n\nEsa hora no se pudo asginar. Hora ocupada.";
+        }
+        cout<<'\n';
+        cout<<"   ";
+        for (int i=6;i<23;i++){
+            if(i<10){
+                cout<<i<<"  ";
+            }
+            else{
+                cout<<i<<" ";
+            }
+        }
+        cout<<'\n';
+        char diasemana[]="LMWJVSD";
+        for (int i=0;i<7;i++){
+            cout<<'\n'<<diasemana[i]<<"  ";
+            for (int j=0;j<17;j++){
+                if (d[i][j]==0){
+                    cout<<"-  ";
+                }
+                else if(d[i][j]==1){
+                    cout<<"+  ";
+                }
+                else if (d[i][j]==2){
+                    cout<<"*  ";
+                }
+            }
+        }
+        cout<<'\n';
+        cout<<"los espacios con + son los ocupados por horas con profesor,los * son las horas asignadas para estudio independiente, los - son los libres.";
+        cout<<"\n\n";
     }
     if (h==0){
         return true;
@@ -431,11 +511,11 @@ void getcredito(char a[],char b[]){
 }
 
 void horario(){
-    //acomodador();
-    bool matriz[7][17];
+    acomodador();
+    int matriz[7][17];
     for (int i=0;i<7;i++){
         for (int j=0;j<17;j++){
-            matriz[i][j]=false;
+            matriz[i][j]=0;
         }
     }
     ifstream fin;
@@ -452,8 +532,9 @@ void horario(){
         }
     }
     int con=0;
-    int hprofe[100]={};
-    char profe[100]={};
+    int hprofe[100]={};                  //Esta la utilizo todo el programa. No es necesario ponerla como memoria dinamica
+    char *profe;
+    profe=new char[100];
     int p=0;
     while (fin.getline(profe,100)){
         con++;
@@ -464,16 +545,40 @@ void horario(){
             p++;
         }
     }
+    delete[] profe;
     fin.clear();
     fin.seekg(0);
-    char linea[100]={};
-    char codigo[100]={};
-    char name[100]={};
-    char creditos[100]={};
+    int matrizcopia[7][17];
+    for (int i=0;i<7;i++){
+        for (int j=0;j<17;j++){
+            matrizcopia[i][j]=matriz[i][j];
+        }
+    }
+    char *linea;
+    linea=new char[100];
+    for (int i = 0; i < 100; i++) {
+        linea[i] = '\0';
+    }
+    char *codigo;
+    codigo=new char[50];
+    for (int i = 0; i < 50; i++) {
+        codigo[i] = '\0';
+    }
+    char *name;
+    name=new char[100];
+    for (int i = 0; i < 100; i++) {
+        name[i] = '\0';
+    }
+    char *creditos;
+    creditos=new char[3];
+    for (int i = 0; i < 3; i++) {
+        creditos[i] = '\0';
+    }
     int creditosint=0;
     int personales=0;
     con=0;
     p=0;
+    bool poder=false;
     while (fin.getline(linea,100)){
         con++;
         if (con==1){
@@ -484,13 +589,20 @@ void horario(){
             creditosint=conversorcharint(creditos);
             personales=horasobrantes(creditosint,hprofe[p]);
             p++;
-            asignacion(personales,codigo,name,matriz);
+            poder=asignacion(personales,codigo,name,matriz);
+            if (poder==false){
+                cout<<"no se pudo asignar mas horas, Se recomienda cancelar materias";
+            }
+            break;
         }
         else if(con==2){
             con=0;
         }
     }
-    fin.close();
+    delete[] linea;
+    delete[] codigo;
+    delete[] name;
+    delete[] creditos;
     cout<<'\n';
     cout<<"   ";
     for (int i=6;i<23;i++){
@@ -506,14 +618,121 @@ void horario(){
     for (int i=0;i<7;i++){
         cout<<'\n'<<diasemana[i]<<"  ";
         for (int j=0;j<17;j++){
-            if (matriz[i][j]==false){
+            if (matriz[i][j]==0){
                 cout<<"-  ";
             }
-            else{
+            else if(matriz[i][j]==1){
                 cout<<"+  ";
+            }
+            else if (matriz[i][j]==2){
+                cout<<"*  ";
             }
         }
     }
     cout<<'\n';
-    cout<<"los espacios con + son los ocupados, los - son los libres.";
+    cout<<"los espacios con + son los ocupados por horas con profesor,los * son las horas asignadas para estudio independiente, los - son los libres.";
+    cout<<"\n\n";
+    int desicion=0;
+    while (desicion<1 || desicion>2){
+        cout<<"Si le gusto su horario marque 1. Si no le gusto y desea asignar de forma manual marque 2";
+        cin>>desicion;
+    }
+    if (desicion==2){
+        cout<<'\n';
+        cout<<"   ";
+        for (int i=6;i<23;i++){
+            if(i<10){
+                cout<<i<<"  ";
+            }
+            else{
+                cout<<i<<" ";
+            }
+        }
+        cout<<'\n';
+        char diasemana[]="LMWJVSD";
+        for (int i=0;i<7;i++){
+            cout<<'\n'<<diasemana[i]<<"  ";
+            for (int j=0;j<17;j++){
+                if (matrizcopia[i][j]==0){
+                    cout<<"-  ";
+                }
+                else if(matrizcopia[i][j]==1){
+                    cout<<"+  ";
+                }
+                else if (matrizcopia[i][j]==2){
+                    cout<<"*  ";
+                }
+            }
+        }
+        cout<<'\n';
+        cout<<"los espacios con + son los ocupados por horas con profesor,los * son las horas asignadas para estudio independiente, los - son los libres.";
+        fin.clear();
+        fin.seekg(0);
+        char *linea;
+        linea=new char[100];
+        for (int i = 0; i < 100; i++) {
+            linea[i] = '\0';
+        }
+        char *codigo;
+        codigo=new char[50];
+        for (int i = 0; i < 50; i++) {
+            codigo[i] = '\0';
+        }
+        char *name;
+        name=new char[100];
+        for (int i = 0; i < 100; i++) {
+            name[i] = '\0';
+        }
+        char *creditos;
+        creditos=new char[3];
+        for (int i = 0; i < 3; i++) {
+            creditos[i] = '\0';
+        }
+        int creditosint=0;
+        int personales=0;
+        con=0;
+        p=0;
+        bool poder2=false;
+        while (fin.getline(linea,100)){
+            con++;
+            if (con==1){
+                for(int i=0;linea[i]!='\0';i++){
+                    codigo[i]=linea[i];
+                }
+                getcredito(codigo,creditos);
+                creditosint=conversorcharint(creditos);
+                personales=horasobrantes(creditosint,hprofe[p]);
+                p++;
+                poder2=asignacionusuario(personales,codigo,name,matrizcopia);
+                if (poder2==false){
+                    cout<<"no se pudo asignar mas horas, Se recomienda cancelar materias";
+                }
+                break;
+            }
+            else if(con==2){
+                con=0;
+            }
+        }
+        delete[] linea;
+        delete[] codigo;
+        delete[] name;
+        delete[] creditos;
+    }
+    fin.close();
+    ofstream fout;
+    try{
+        fout.open("informacion.txt");
+        if(!fout.is_open()){
+            throw '2';
+        }
+    }
+    catch (char c){
+        cout<<"Error # "<<c<<": ";
+        if(c=='2'){
+            cout<<"Error al abrir el archivo para lectura.\n";
+        }
+    }
+    char a[2]="\0";
+    fout.write(a,2);
+    fout.close();
 }
