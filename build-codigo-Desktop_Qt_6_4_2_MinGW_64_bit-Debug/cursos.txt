@@ -34,3 +34,66 @@ circuitos electricos i
 2555221
 algebra lineal
 3
+2599421
+introduccion a ing en telecos
+1
+2538201
+ingles ii
+1
+2539101
+lectoescritura
+3
+2536302
+fisica de ondas
+3
+2555331
+calculo vectorial
+3
+2598531
+ecuaciones diferenciales
+3
+2599431
+probabilidad y estadistica
+3
+2538301
+ingles iii
+1
+2517362
+formacion ciudadana
+1
+2536311
+fisica de campos
+3
+2598541
+matematicas especiales
+3
+2598544
+metodos numericos
+3
+2598542
+circuitos electricos ii
+4
+2599441
+referenciacion geografica
+1
+2538401
+ingles iv
+1
+2536502
+lab integrado de fisica
+2
+2598554
+electromagnetismo
+3
+2598551
+fisica del estado solido
+3
+2599451
+fundamento de electronica analoga
+4
+2599452
+fundamento de electronica digital
+4
+2538501
+ingles v
+1

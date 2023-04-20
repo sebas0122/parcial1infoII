@@ -20,5 +20,7 @@ bool comparador(char a[], char b[]);
 bool verificadorcodigo(char a[]);
 void getcredito(char a[],char b[]);
 void getname(char a[],char b[]);
+void inicializador(char a[]);
+bool asignacionusuario(int h,char codi[],char n[],int d[7][17]);
 
 #endif // HORARIO_H

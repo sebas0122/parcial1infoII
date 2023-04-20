@@ -31,6 +31,13 @@ int longitud(char a[]){
     return i;
 }
 
+void inicializador(char a[]){
+    int lon=longitud(a);
+    for (int i = 0; i < lon; i++) {
+        a[i] = '\0';
+    }
+}
+
 bool comparador(char a[], char b[]){
     int lon1=longitud(a);
     int lon2=longitud(b);
@@ -239,7 +246,7 @@ void matrizhoras(char a[],int d[7][17]){
                                 d[t][j]=1;
                             }
                             else{
-                                cout<<"Hay materias que tienen el mismo horario. Por lo tanto lo que matriculo no es valido.";
+                                cout<<"Hay materias que tienen el mismo horario. Por lo tanto lo que matriculo no es valido. Marque 1 para volver a iniciar el proceso";
                                 break;
                             }
                         }
@@ -592,8 +599,12 @@ void horario(){
             poder=asignacion(personales,codigo,name,matriz);
             if (poder==false){
                 cout<<"no se pudo asignar mas horas, Se recomienda cancelar materias";
+                break;
             }
-            break;
+            inicializador(linea);
+            inicializador(codigo);
+            inicializador(name);
+            inicializador(creditos);
         }
         else if(con==2){
             con=0;
@@ -634,7 +645,7 @@ void horario(){
     cout<<"\n\n";
     int desicion=0;
     while (desicion<1 || desicion>2){
-        cout<<"Si le gusto su horario marque 1. Si no le gusto y desea asignar de forma manual marque 2";
+        cout<<"Si le gusto su horario marque 1. Si no le gusto y desea asignar de forma manual marque 2: ";
         cin>>desicion;
     }
     if (desicion==2){
@@ -706,8 +717,12 @@ void horario(){
                 poder2=asignacionusuario(personales,codigo,name,matrizcopia);
                 if (poder2==false){
                     cout<<"no se pudo asignar mas horas, Se recomienda cancelar materias";
+                    break;
                 }
-                break;
+                inicializador(linea);
+                inicializador(codigo);
+                inicializador(name);
+                inicializador(creditos);
             }
             else if(con==2){
                 con=0;
@@ -721,7 +736,7 @@ void horario(){
     fin.close();
     ofstream fout;
     try{
-        fout.open("informacion.txt");
+        fout.open("informacion.txt",std::ios::trunc);
         if(!fout.is_open()){
             throw '2';
         }
@@ -732,7 +747,5 @@ void horario(){
             cout<<"Error al abrir el archivo para lectura.\n";
         }
     }
-    char a[2]="\0";
-    fout.write(a,2);
     fout.close();
 }
